@@ -1,3 +1,4 @@
+var ud = require('ud');
 var h = require('virtual-dom/h')
 var EE = require('events').EventEmitter
 var app =  document.querySelector('#app')
@@ -13,19 +14,20 @@ var dispatcher = new EE()
 
 // data structures
 
-var store = {
-  n: 0
-}
+var store = ud.defonce(module, function () {
+  return {
+    n: 0
+  }
+}, 'store')
 
 
 // view logic
-var ud = require('ud');
 
 var render = ud.defn(module, function (state) {
 
   return h('div', [
     h('h1', `clicked ${state.n} times`),
-    h('button', { onclick: handleClick }, 'click me!')
+    h('button', { onclick: handleClick }, 'click !')
   ])
 
   function handleClick (ev) {
