@@ -1,6 +1,8 @@
-# empty webapp
+# three.js box viewer
 
-an empty webapp
+view a 3D shape made out of boxes.
+
+complimentary to the package [stl-to-boxes](https://git.autodesk.com/t-merrn/stl-to-boxes)
 
 ## setup
 
