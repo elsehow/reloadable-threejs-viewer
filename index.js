@@ -1,50 +1,48 @@
-var ud = require('ud');
-var h = require('virtual-dom/h')
-var EE = require('events').EventEmitter
-var app =  document.querySelector('#app')
-function declare (fn, store) {
-  var ml = require('main-loop')
-  var l = ml(store, fn, require('virtual-dom'))
-  app.innerHTML = ''
-  app.appendChild(l.target)
-  return l
-}
-//
-var dispatcher = new EE()
+var udKefir = require('ud-kefir');
+var THREE = require('three')
+var OrbitControls = require('three-orbit-controls')(THREE)
 
-// data structures
+var scene, camera, renderer, controls;
+var geometry, material, mesh;
 
-var store = ud.defonce(module, function () {
-  return {
-    n: 0
-  }
-}, 'store')
+var initS = udKefir(module, function () {
 
+  scene = new THREE.Scene();
 
-// view logic
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.z = 1000;
 
-var render = ud.defn(module, function (state) {
+  controls = new OrbitControls( camera );
+  controls.addEventListener( 'change', render );
 
-  return h('div', [
-    h('h1', `clicked ${state.n} times`),
-    h('button', { onclick: handleClick }, 'click !')
-  ])
+  geometry = new THREE.BoxGeometry( 300, 300, 300 );
+  material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
 
-  function handleClick (ev) {
-    dispatcher.emit('button-click', ev)
-  }
+  mesh = new THREE.Mesh( geometry, material );
+  scene.add( mesh );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+  document.body.appendChild( renderer.domElement );
+  render()
+  console.log('loaded!')
 
 })
 
-// actions
-function actions (loop) {
-  dispatcher.on('button-click', (ev) => {
-    store.n = store.n+1
-    loop.update(store)
-  })
+function animate() {
+
+  requestAnimationFrame( animate );
+
+  controls.update();
 }
 
+function render () {
+  renderer.render( scene, camera );
+}
 
-var loop = declare(render, store)
-actions(loop)
-
+initS.onValue(init => {
+  document.body.innerHTML = ''
+  init()
+  animate()
+})

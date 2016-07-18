@@ -3,8 +3,7 @@
   "scripts": {
     "watch": "watchify -vd -p browserify-hmr index.js -o bundle.js",
     "start": "ecstatic --port 9999",
-    "dev": "npm run watch & npm start",
-    "build": "browserify index.js | java -jar compiler.jar --language_out=ES5 > bundle.js; html-inline -i index.html -o dist/index.html"
+    "dev": "npm run watch & npm start"
   },
   "author": "elsehow",
   "license": "BSD-2-Clause",
@@ -15,8 +14,12 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "kefir": "^3.3.0",
     "main-loop": "^3.2.0",
+    "three": "^0.79.0",
+    "three-orbit-controls": "^72.0.0",
     "ud": "^3.0.1",
+    "ud-kefir": "^2.0.2",
     "virtual-dom": "^2.1.1"
   }
 }
